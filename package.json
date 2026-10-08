@@ -1,0 +1,13 @@
+{
+  "name": "tappedin-media",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TAPPED IN Media static website and quote builder",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "node scripts/serve.cjs",
+    "start": "node scripts/serve.cjs",
+    "build": "node scripts/build.cjs",
+    "test": "node --test"
+  }
+}
