@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TAPPED IN Media</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#000;--fg:#fff;--mut:rgba(255,255,255,.55);--line:rgba(255,255,255,.2);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2{margin:0;font-weight:900;letter-spacing:-.04em;line-height:.92;text-transform:uppercase}
+h1{font-size:clamp(46px,10vw,168px)}
+h2{font-size:clamp(34px,6vw,84px)}
+h3{margin:0;font-weight:700;font-size:clamp(19px,2vw,24px);letter-spacing:-.01em}
+p{margin:0 0 1em;max-width:58ch;font-size:clamp(16px,1.4vw,19px)}
+.mut{color:var(--mut)}
+section{padding:clamp(70px,11vw,150px) clamp(20px,6vw,80px)}
+.wrap{max-width:1360px;margin:0 auto}
+.btn{display:inline-flex;align-items:center;gap:8px;background:none;color:var(--fg);border:1px solid var(--fg);padding:16px 26px;font:700 14px/1 "Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:.03em;cursor:pointer;text-decoration:none;transition:background .18s,color .18s}
+.btn:hover,.btn.solid{background:var(--fg);color:var(--bg)}
+.btn.solid:hover{background:transparent;color:var(--fg)}
+.btn.ghost{border-color:var(--line);color:var(--mut)}
+:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top,0px)) clamp(20px,6vw,80px) 18px;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav b{font-weight:900;font-size:19px;letter-spacing:-.02em}
+nav b i{font-style:normal;opacity:.5}
+nav a{color:var(--fg);text-decoration:none;font-weight:500;font-size:13px;margin-left:24px}
+@media(max-width:760px){nav a.hide{display:none}}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative}
+.pulse{position:absolute;top:120px;right:clamp(20px,6vw,80px);width:10px;height:10px;border-radius:50%;background:var(--fg);animation:p 1.8s ease-in-out infinite}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.5)}70%{box-shadow:0 0 0 22px rgba(255,255,255,0)}}
+.hero p{font-size:clamp(18px,2vw,24px);margin-top:28px}
+.hero .row{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr;gap:36px}}
+.statement{font-size:clamp(26px,3.4vw,48px);font-weight:900;letter-spacing:-.02em;text-transform:uppercase;line-height:1.08;margin:48px 0}
+.statement b{display:block}
+
+.rail{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:48px;overflow-x:auto}
+.rail div{flex:1;min-width:120px;padding:18px 16px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+
+.svc{border-top:1px solid var(--line)}
+.svc:last-child{border-bottom:1px solid var(--line)}
+.svc summary{list-style:none;cursor:pointer;padding:26px 0;display:flex;justify-content:space-between;align-items:baseline;gap:20px}
+.svc summary::-webkit-details-marker{display:none}
+.svc summary h3{font-size:clamp(22px,3vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+.svc summary small{color:var(--mut);font-size:13px;white-space:nowrap}
+.svc summary:after{content:"→";transition:transform .2s;font-size:20px}
+.svc[open] summary:after{transform:rotate(90deg)}
+.svc ul{margin:0 0 30px;padding:0;list-style:none;columns:2;color:var(--mut)}
+.svc li{padding:5px 0;break-inside:avoid}
+@media(max-width:700px){.svc ul{columns:1}}
+
+.seq{display:flex;flex-wrap:wrap;gap:0;margin-top:40px}
+.seq span{border:1px solid var(--line);padding:12px 18px;margin:-1px 0 0 -1px;font-weight:700;font-size:14px;text-transform:uppercase}
+
+/* builder */
+.qbuild{margin-top:48px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:clamp(24px,4vw,60px);align-items:start}
+@media(max-width:980px){.qbuild{grid-template-columns:1fr}}
+.steplabel{font-size:13px;letter-spacing:.05em;color:var(--mut);margin-bottom:6px}
+.prog{display:flex;gap:6px;margin-bottom:30px}
+.prog i{flex:1;height:2px;background:var(--line)}
+.prog i.on{background:var(--fg)}
+.step{display:none}
+.step.on{display:block}
+.step h3{font-size:clamp(24px,3.2vw,38px);font-weight:900;text-transform:uppercase;letter-spacing:-.02em;margin-bottom:22px}
+.opt{display:flex;align-items:flex-start;gap:16px;border:1px solid var(--line);padding:18px 20px;margin:-1px 0 0;cursor:pointer;min-height:56px}
+.opt:hover{border-color:rgba(255,255,255,.5)}
+.opt:has(input:checked){border-color:var(--fg);position:relative;z-index:1}
+.opt input{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;margin-top:1px;border:1.5px solid var(--fg);border-radius:50%;display:grid;place-content:center}
+.opt input[type=checkbox]{border-radius:0}
+.opt input:checked:before{content:"";width:11px;height:11px;background:var(--fg);border-radius:inherit}
+.opt .b{flex:1}
+.opt .b b{font-weight:500;display:block}
+.opt .b small{color:var(--mut);font-size:13px;display:block;margin-top:3px}
+.opt em{font-style:normal;color:var(--mut);font-size:13px;white-space:nowrap}
+.nav2{display:flex;justify-content:space-between;gap:12px;margin-top:32px}
+
+.qsum{position:sticky;top:96px;border:1px solid var(--fg);padding:28px}
+.qsum h3{font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:16px}
+.qsum .tagline{font-size:14px;color:var(--mut);margin-bottom:18px;line-height:1.6}
+.qsum .ln{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.qsum .tot{font-size:clamp(34px,3.6vw,46px);font-weight:900;letter-spacing:-.03em;margin:16px 0 2px}
+.qsum .totlbl{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+
+input,textarea{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:14px;font:inherit;margin:6px 0 18px}
+input:focus,textarea:focus{border-color:var(--fg);outline:0}
+label.f{font-size:13px;color:var(--mut)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;max-width:820px;margin-top:36px}
+.form .full{grid-column:1/-1}
+@media(max-width:700px){.form{grid-template-columns:1fr}}
+
+.mbar{display:none}
+@media(max-width:980px){
+ .qsum{position:static}
+ .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(0,0,0,.92);backdrop-filter:blur(6px);border-top:1px solid var(--fg);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));justify-content:space-between;align-items:center;gap:12px}
+ .mbar small{display:block;color:var(--mut);font-size:11px;text-transform:uppercase}
+ .mbar strong{font-size:26px;font-weight:900}
+ body{padding-bottom:86px}
+ .mbar.hidden{display:none}
+}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.94);display:none;overflow:auto;padding:24px}
+.modal.on{display:block}
+.card{background:var(--bg);border:1px solid var(--fg);max-width:800px;margin:0 auto;padding:clamp(24px,5vw,54px)}
+.card table{width:100%;border-collapse:collapse;margin:6px 0 22px}
+.card td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.card td:last-child{text-align:right;white-space:nowrap;font-weight:700}
+.card h3{margin:24px 0 2px;font-size:13px;letter-spacing:.05em;color:var(--mut);text-transform:uppercase}
+footer{border-top:1px solid var(--line);padding:clamp(60px,10vw,110px) clamp(20px,6vw,80px) 40px}
+footer .flinks{display:flex;gap:28px;flex-wrap:wrap;margin-top:40px}
+footer a{color:var(--mut);text-decoration:none;font-size:14px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media print{body>*:not(.modal){display:none!important}.modal{position:static;background:#000;padding:0}.qa{display:none!important}}
+</style>
+</head>
+<body>
+<nav><b>TAPPED <i>IN</i></b><div><a class="hide" href="#who">Who we are</a><a class="hide" href="#what">What we do</a><a href="#quote">Build a quote</a></div></nav>
+
+<section class="hero"><div class="wrap">
+ <span class="pulse" aria-hidden="true"></span>
+ <h1>Get tapped in.</h1>
+ <p>We create media, content, creative and experiences around the places and people worth paying attention to.</p>
+ <div class="row"><a class="btn solid" href="#quote">Build your quote →</a><a class="btn" href="#what">See what we do ↓</a></div>
+</div></section>
+
+<section id="who"><div class="wrap split">
+ <div><h2>We're a creative business.</h2></div>
+ <div>
+  <p>TAPPED IN Media creates content and experiences around venues, events, brands and culture.</p>
+  <p>We capture what is happening, turn it into media and help put it in front of more people.</p>
+  <p class="mut">Sometimes that means a camera. Sometimes it means a campaign. Sometimes it means an activation. Sometimes it means all three.</p>
+ </div>
+</div>
+<div class="wrap statement"><b>We don't just document what's happening.</b><b>We are tapped in.</b></div>
+</section>
+
+<section id="what"><div class="wrap">
+ <h2>What we do.</h2>
+ <div style="margin-top:12px">
+  <details class="svc" open><summary><h3>Media</h3><small>Video, photography & coverage</small></summary><ul><li>Video</li><li>Photography</li><li>Reels</li><li>Aftermovies</li><li>Landscape content</li><li>Portrait content</li><li>Event coverage</li><li>Venue coverage</li><li>Product content</li><li>Behind-the-scenes</li><li>Interviews</li></ul></details>
+  <details class="svc"><summary><h3>Creative</h3><small>Design & campaign assets</small></summary><ul><li>Graphic design</li><li>Social media graphics</li><li>Event artwork</li><li>Promotional artwork</li><li>Campaign assets</li></ul></details>
+  <details class="svc"><summary><h3>Live</h3><small>Real-time coverage</small></summary><ul><li>Live posting</li><li>On-site content editing</li><li>Same-day content editing</li><li>Real-time social coverage</li></ul></details>
+  <details class="svc"><summary><h3>Promotion</h3><small>Distribution & paid media</small></summary><ul><li>Content promotion</li><li>Event promotion</li><li>Social distribution</li><li>Paid advertising</li><li>Content collaborations</li></ul></details>
+  <details class="svc"><summary><h3>Activation</h3><small>Experiences, quoted separately</small></summary><ul><li>Pop-up experiences</li><li>Audience engagement</li><li>Brand activations</li><li>Venue activations</li><li>Creator collaborations</li></ul></details>
+  <details class="svc"><summary><h3>Drone</h3><small>Aerial footage</small></summary><ul><li>Venue establishing footage</li><li>Exterior shots</li><li>Crowd scale</li><li>Event atmosphere</li><li>Cinematic aerial footage</li></ul></details>
+ </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+ <h2>From setup to lights off.</h2>
+ <div style="margin-top:32px">
+  <p>We can capture the entire experience. The preparation. The doors opening. The first guests. The crowd. The personalities. The products.</p>
+  <p class="mut">The moments nobody planned. The final lights. Then we turn what happened into media.</p>
+ </div>
+ <div class="seq"><span>Setup</span><span>People</span><span>Experience</span><span>Content</span><span>Distribution</span></div>
+</div></section>
+
+<section id="approach"><div class="wrap split">
+ <div><h2>We're part of the audience.</h2></div>
+ <div>
+  <p>We're not interested in making your venue feel like a film set. We want to capture what it actually feels like to be there.</p>
+  <p class="mut">Our content is built around real people, real experiences and real moments.</p>
+ </div>
+</div>
+<div class="wrap statement"><b>The camera is only the tool.</b><b>The experience is the story.</b></div>
+</section>
+
+<section id="quote"><div class="wrap">
+ <h2>Build your quote.</h2>
+ <p style="margin-top:28px">Tell us what you need. Build the kind of TAPPED IN operation that makes sense for your venue, event or brand.</p>
+ <div class="qbuild">
+  <div>
+   <div class="steplabel" id="slabel"></div>
+   <div class="prog" id="prog"></div>
+   <div id="steps"></div>
+   <div class="nav2"><button class="btn ghost" id="back">← Back</button><button class="btn solid" id="next">Next →</button></div>
+  </div>
+  <aside class="qsum">
+   <h3>Your TAPPED IN quote</h3>
+   <div class="tagline" id="tagline"></div>
+   <div class="ln"><span>TAPPED IN services</span><b id="s1"></b></div>
+   <div class="ln"><span>Paid media</span><b id="s2"></b></div>
+   <div class="ln" id="actln" style="display:none"><span>Activation</span><b>Custom quote</b></div>
+   <div class="totlbl" style="margin-top:16px">Total</div>
+   <div class="tot" id="tot"></div>
+   <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap"><button class="btn solid" onclick="openQuote()">Generate my quote →</button><button class="btn ghost" onclick="startAgain()">Start again</button></div>
+  </aside>
+ </div>
+</div></section>
+
+<section id="trial"><div class="wrap">
+ <h2>See what we can do first.</h2>
+ <p style="margin-top:28px">Not ready to commit? Give us one full day. We'll get tapped into your venue, capture what is happening and show you what your space can become when it is treated as media.</p>
+ <div class="statement" style="margin:40px 0"><b>One full day.</b><b>No service fee.</b></div>
+ <div class="split">
+  <div>
+   <h3 style="text-transform:uppercase;font-size:15px;letter-spacing:.05em;color:var(--mut);margin-bottom:14px">The free media day</h3>
+   <p class="mut">TAPPED IN will attend the agreed venue or event for one full day and create content during the experience. We decide what content is suitable for release on TAPPED IN's channels.</p>
+   <p class="mut">The released content will be posted through TAPPED IN and/or collaboratively with the venue, at TAPPED IN's discretion. The deliverable is the published content, not ownership of all media captured.</p>
+  </div>
+  <div>
+   <h3 style="text-transform:uppercase;font-size:15px;letter-spacing:.05em;color:var(--mut);margin-bottom:14px">Want the media?</h3>
+   <p class="mut">The free media day is designed to demonstrate what TAPPED IN can create. Content we choose to publish forms part of the TAPPED IN deliverable.</p>
+   <p class="mut">If you would like access to the captured media for your own channels, marketing or internal use, that media is available as a separately paid service.</p>
+   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px"><a class="btn" href="#contact" onclick="prepMedia()">Request media access →</a></div>
+  </div>
+ </div>
+ <div style="margin-top:56px"><a class="btn solid" href="#contact" onclick="prepTrial()">Apply for your free media day →</a></div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+ <h2>Talk to TAPPED IN.</h2>
+ <p style="margin-top:28px" id="contactLead">Let's talk about what you want to create.</p>
+ <div id="attached" class="mut" style="font-size:14px;margin-top:-6px"></div>
+ <form class="form" id="cf" onsubmit="return false">
+  <div><label class="f">Name</label><input name="name" required></div>
+  <div><label class="f">Company / venue</label><input name="company"></div>
+  <div><label class="f">Email</label><input type="email" name="email" required></div>
+  <div><label class="f">Phone</label><input type="tel" name="phone"></div>
+  <div><label class="f">Website / Instagram</label><input name="site"></div>
+  <div>
+   <label class="f">Preferred contact method</label>
+   <div style="display:flex;gap:16px;margin:10px 0 18px;flex-wrap:wrap">
+    <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="radio" name="pref" value="Email" checked style="width:auto;margin:0"> Email</label>
+    <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="radio" name="pref" value="WhatsApp" style="width:auto;margin:0"> WhatsApp</label>
+    <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="radio" name="pref" value="Phone" style="width:auto;margin:0"> Phone</label>
+   </div>
+  </div>
+  <div class="full"><label class="f">What are you looking to create?</label><textarea name="brief" rows="3"></textarea></div>
+  <div class="full"><button class="btn solid" id="csub" type="button">Open email draft →</button><p id="cmsg" style="margin-top:16px"></p></div>
+ </form>
+</div></section>
+
+
+
+<footer><div class="wrap">
+ <h2 style="font-size:clamp(34px,5vw,72px)">Get tapped in.</h2>
+ <div class="flinks"><a href="#who">About</a><a href="#what">Services</a><a href="#quote">Build a quote</a><a href="#trial">Free media day</a><a href="#contact">Contact</a></div>
+ <p class="mut" style="margin-top:40px;font-size:13px">TAPPED IN Media — media, creative and promotion for places worth being.</p>
+</div></footer>
+
+<div class="mbar hidden" id="mbar"><div><small>Total</small><strong id="mtot"></strong></div><button class="btn solid" onclick="openQuote()">Generate quote</button></div>
+<div class="modal" id="modal"><div class="card" id="qbody"></div></div>
+
+<script>
+/* ---- pricing config: edit here ---- */
+const pricing={
+ visits:{1:5500,2:10500,4:20000,6:27500,8:34000},
+ team:3,                    // 3-person team factored into deliverables, not priced separately
+ creative:{single:1500,multiple:1000},
+ production:{drone:2500,livePosting:2500},
+ advertising:{0:0,1000:1000,3000:3000,5000:5000,10000:10000},
+ validityDays:30,
+ contact:"hello@tappedin.media"
+};
+const creativeItems=[
+ ["Social graphics","Static and carousel graphics formatted for social media, including event announcements, promotional posts and informational content."],
+ ["Event artwork","Digital promotional artwork for events, including posters, flyers and social-ready event announcements."],
+ ["Campaign creative","A coordinated set of visual assets designed around a specific campaign, promotion or activation."],
+ ["Promotional graphics","Sales, offers, announcements, venue promotions and other conversion-focused social assets."],
+ ["Social templates","Reusable branded templates for recurring venue content and social communication."],
+ ["Digital menu / product graphics","Clean digital visual assets for menus, products, specials and featured offerings."]
+];
+const contentGroups={
+ Video:["Event video","Venue reels","Aftermovie","Interviews","Product content","Behind-the-scenes","Landscape content","Portrait content"],
+ Photo:["Event photography","Venue photography","Product photography","Portrait photography"]
+};
+const acts=["Venue pop-up","Audience engagement","Creator collaboration","Brand activation","Custom experience"];
+const R=n=>"R"+Math.round(n).toLocaleString("en-ZA").replace(/\s|\u00a0/g,",");
+const S={visits:4,content:new Set(["Event video","Venue reels","Event photography"]),creative:new Set(["Social graphics"]),prod:{drone:false,livePosting:false},adMode:"1000",customAd:0,acts:new Set()};
+const $=id=>document.getElementById(id);
+const radio=(n,v,l,c,ex="")=>`<label class="opt"><input type="radio" name="${n}" value="${v}" ${c?"checked":""}><div class="b"><b>${l}</b></div><em>${ex}</em></label>`;
+const check=(n,v,l,c,sub="",ex="")=>`<label class="opt"><input type="checkbox" name="${n}" value="${v}" ${c?"checked":""}><div class="b"><b>${l}</b>${sub?`<small>${sub}</small>`:""}</div><em>${ex}</em></label>`;
+
+const stepNames=["Frequency","Content","Creative","Production","Promotion","Review"];
+const steps=[
+ {t:"How often do you want us tapped in?",h:()=>Object.keys(pricing.visits).map(v=>radio("visits",v,v+(v==1?" visit":" visits")+" / month",S.visits==v,v==4?"Standard":"")).join("")},
+ {t:"What do you want us to create?",h:()=>Object.entries(contentGroups).map(([g,a])=>`<div style="font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.05em;color:var(--mut);margin:22px 0 8px">${g}</div>`+a.map(x=>check("content",x,x,S.content.has(x))).join("")).join("")},
+ {t:"Add creative.",h:()=>`<p class="mut" style="margin-bottom:18px">R1,500 each — or R1,000 each when you select two or more.</p>`+creativeItems.map(([l,sub])=>check("creative",l,l,S.creative.has(l),sub)).join("")},
+ {t:"Add production.",h:()=>check("prod","drone","Drone",S.prod.drone,"Aerial venue, location, crowd and establishing footage captured where operationally and legally permitted.",R(pricing.production.drone))+check("prod","livePosting","Live posting",S.prod.livePosting,"Real-time social coverage during the event, including on-site content selection, quick edits and same-day posting.",R(pricing.production.livePosting))},
+ {t:"Put the content to work.",h:()=>[["0","Organic distribution"],["1000","R1,000 paid media"],["3000","R3,000 paid media"],["5000","R5,000 paid media"],["10000","R10,000 paid media"]].map(([v,l])=>radio("ad",v,l,S.adMode==v)).join("")+radio("ad","custom","Custom",S.adMode=="custom")+`<input id="cad" type="number" min="0" step="500" placeholder="Monthly paid media amount" value="${S.customAd||""}" style="display:${S.adMode=="custom"?"block":"none"};margin-top:12px"><p class="mut" style="margin-top:14px;font-size:14px">Paid media is advertising spend used to promote selected TAPPED IN content. It's separate from our service fee.</p>`+
+   `<div style="margin-top:28px"><div style="font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.05em;color:var(--mut);margin-bottom:8px">Want to create something happening?</div>`+acts.map(a=>check("act",a,a,S.acts.has(a))).join("")+`<p class="mut" style="margin-top:12px;font-size:14px">Activations are quoted separately — selecting one adds a line to your quote, not a price.</p></div>`},
+ {t:"Review your quote.",h:()=>reviewHtml()}
+];
+let cur=0;
+
+function creativeCost(){
+ const n=S.creative.size;
+ if(!n)return 0;
+ return n===1?pricing.creative.single:n*pricing.creative.multiple;
+}
+function prodCost(){return (S.prod.drone?pricing.production.drone:0)+(S.prod.livePosting?pricing.production.livePosting:0)}
+function calc(){
+ const amount=Number(S.customAd);
+ const adv=S.adMode=="custom"?(Number.isFinite(amount)&&amount>=0?amount:0):+S.adMode;
+ const svc=pricing.visits[S.visits]+creativeCost()+prodCost();
+ return{svc,adv,tot:svc+adv};
+}
+function reviewHtml(){
+ const c=calc();
+ const line=(l,v)=>`<div class="opt" style="cursor:default"><div class="b"><b>${l}</b></div><em>${v}</em></div>`;
+ return line("Frequency",S.visits+(S.visits==1?" visit":" visits")+" / month")
+  +line("Content",[...S.content].length?[...S.content].join(", "):"None selected")
+  +line("Creative",[...S.creative].length?[...S.creative].join(", ")+" — "+R(creativeCost()):"None selected")
+  +line("Production",[S.prod.drone&&"Drone",S.prod.livePosting&&"Live posting"].filter(Boolean).join(", ")||"None selected")
+  +line("Promotion",c.adv?R(c.adv)+" paid media":"Organic distribution")
+  +line("Activation",S.acts.size?[...S.acts].join(", ")+" — custom quote":"None selected")
+  +line("TAPPED IN services",R(c.svc))
+  +line("Total",R(c.tot)+" / month");
+}
+function render(){
+ $("slabel").textContent=String(cur+1).padStart(2,"0")+" / "+steps.length+" — "+stepNames[cur].toUpperCase();
+ $("prog").innerHTML=steps.map((_,i)=>`<i class="${i<=cur?"on":""}"></i>`).join("");
+ $("steps").innerHTML=steps.map((s,i)=>`<div class="step ${i==cur?"on":""}"><h3>${s.t}</h3>${s.h()}</div>`).join("");
+ $("back").style.visibility=cur?"visible":"hidden";
+ $("next").textContent=cur==steps.length-1?"Generate my quote →":"Next →";
+ update();
+}
+const shown={};
+function tween(el,to,id){
+ const from=shown[id]??to;shown[id]=to;
+ if(matchMedia("(prefers-reduced-motion:reduce)").matches||from===to){el.textContent=R(to);return}
+ const t0=performance.now();
+ (function f(t){const p=Math.min(1,(t-t0)/350);el.textContent=R(from+(to-from)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0);
+}
+function update(){
+ const c=calc();
+ tween($("s1"),c.svc,"s1");tween($("s2"),c.adv,"s2");tween($("tot"),c.tot,"tot");tween($("mtot"),c.tot,"mtot");
+ $("actln").style.display=S.acts.size?"flex":"none";
+ const parts=[S.visits+(S.visits==1?" visit":" visits")+" / month",pricing.team+"-person production team",...[...S.content].slice(0,3)];
+ if([...S.creative].length)parts.push("Creative");
+ if(S.prod.drone)parts.push("Drone");
+ if(S.prod.livePosting)parts.push("Live posting");
+ $("tagline").textContent=parts.join(" · ");
+}
+document.addEventListener("change",e=>{
+ const t=e.target,n=t.name;if(!n)return;
+ if(n=="visits")S.visits=+t.value;
+ if(n=="content")t.checked?S.content.add(t.value):S.content.delete(t.value);
+ if(n=="creative")t.checked?S.creative.add(t.value):S.creative.delete(t.value);
+ if(n=="prod")S.prod[t.value]=t.checked;
+ if(n=="act")t.checked?S.acts.add(t.value):S.acts.delete(t.value);
+ if(n=="ad"){S.adMode=t.value;const i=$("cad");if(i)i.style.display=t.value=="custom"?"block":"none"}
+ if(cur==steps.length-1)render(); else update();
+});
+document.addEventListener("input",e=>{if(e.target.id=="cad"){S.customAd=e.target.value;update();if(cur==steps.length-1)render()}});
+$("back").onclick=()=>{if(cur>0){cur--;render()}};
+$("next").onclick=()=>{if(cur===4&&!validateQuote())return;if(cur<steps.length-1){cur++;render()}else openQuote()};
+function startAgain(){S.visits=4;S.content=new Set();S.creative=new Set();S.prod={drone:false,livePosting:false};S.adMode="1000";S.customAd=0;S.acts=new Set();cur=0;render()}
+new IntersectionObserver(([e])=>$("mbar").classList.toggle("hidden",!e.isIntersecting),{threshold:.05}).observe($("quote"));
+render();
+
+/* quote modal */
+function validateQuote(){
+ const amount=Number(S.customAd);
+ if(S.adMode==="custom"&&(!Number.isFinite(amount)||amount<0||amount%500!==0)){
+  cur=4;render();$("cad").reportValidity();$("cad").focus();return false;
+ }
+ return true;
+}
+function openQuote(){
+ if(!validateQuote())return;
+ const c=calc(),d=new Date(),v=new Date(Date.now()+pricing.validityDays*864e5);
+ const fmt=x=>x.toLocaleDateString("en-ZA",{year:"numeric",month:"long",day:"numeric"});
+ $("qbody").innerHTML=`<div style="display:flex;justify-content:space-between;gap:16px"><div><div style="font-weight:900;font-size:40px;letter-spacing:-.03em;text-transform:uppercase">Tapped In</div><div class="mut" style="font-size:13px;margin-top:4px">Media, creative & promotion</div></div><div class="mut" style="text-align:right;font-size:14px">Quote<br>${fmt(d)}</div></div>
+ <h3>Frequency</h3><table><tr><td>${S.visits} ${S.visits==1?"visit":"visits"} / month</td><td>${R(pricing.visits[S.visits])}</td></tr></table>
+ <h3>Content</h3><table>${[...S.content].length?[...S.content].map(x=>`<tr><td>${x}</td><td>Included</td></tr>`).join(""):`<tr><td class="mut">None selected</td><td></td></tr>`}</table>
+ <h3>Creative</h3><table>${[...S.creative].length?[...S.creative].map(x=>`<tr><td>${x}</td><td>${S.creative.size>1?R(pricing.creative.multiple):R(pricing.creative.single)}</td></tr>`).join("")+`<tr><td><b>Creative total</b></td><td>${R(creativeCost())}</td></tr>`:`<tr><td class="mut">None selected</td><td></td></tr>`}</table>
+ <h3>Production</h3><table>${[S.prod.drone?`<tr><td>Drone</td><td>${R(pricing.production.drone)}</td></tr>`:"",S.prod.livePosting?`<tr><td>Live posting</td><td>${R(pricing.production.livePosting)}</td></tr>`:""].join("")||`<tr><td class="mut">None selected</td><td></td></tr>`}</table>
+ <h3>TAPPED IN services</h3><table><tr><td><b>Monthly service total</b></td><td>${R(c.svc)}</td></tr></table>
+ <h3>Paid media (advertising spend, separate from our service fee)</h3><table><tr><td>Monthly paid media</td><td>${c.adv?R(c.adv):"Organic distribution"}</td></tr></table>
+ <h3>Activation</h3><table>${S.acts.size?[...S.acts].map(a=>`<tr><td>${a}</td><td>Custom quote</td></tr>`).join(""):`<tr><td class="mut">None selected</td><td></td></tr>`}</table>
+ <div style="font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-top:10px">Total / month</div>
+ <div style="font-size:56px;font-weight:900;letter-spacing:-.03em;margin:4px 0 20px">${R(c.tot)}</div>
+ <p class="mut" style="font-size:14px">Valid until ${fmt(v)}. Indicative pricing — final scope confirmed on a call. Contact: ${pricing.contact}</p>
+ <div class="qa" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn solid" onclick="goToContact()">Looks good? Talk to TAPPED IN →</button><button class="btn ghost" onclick="try{window.print()}catch(e){}">Print</button><button class="btn ghost" onclick="$('modal').classList.remove('on')">Close</button></div>`;
+ $("modal").classList.add("on");
+}
+let enquiryType="General enquiry", attachedQuote="";
+function quoteText(){
+ const c=calc();
+ return [S.visits+" visits / month", "Content: "+([...S.content].join(", ")||"None"), "Creative: "+([...S.creative].join(", ")||"None"), "Production: "+([S.prod.drone&&"Drone",S.prod.livePosting&&"Live posting"].filter(Boolean).join(", ")||"None"), "Activation: "+([...S.acts].join(", ")||"None")+" (quoted separately)", "Services: "+R(c.svc), "Paid media: "+R(c.adv), "Total: "+R(c.tot)+" / month", "Indicative pricing; final scope confirmed on a call."].join("\n");
+}
+function goToContact(){
+ enquiryType="Quote enquiry";attachedQuote=quoteText();
+ $("modal").classList.remove("on");
+ const c=calc();
+ $("contactLead").textContent="Looks good? Let's talk about what you want to create.";
+ $("attached").innerHTML="Your quote will be included in your email draft — "+S.visits+(S.visits==1?" visit":" visits")+"/mo, "+pricing.team+"-person team, "+[...S.content,...S.creative].length+" items, "+R(c.tot)+" total/month.";
+ location.hash="#contact";
+}
+function prepMedia(){
+ enquiryType="Media access request";attachedQuote="";
+ $("contactLead").textContent="Requesting media access — tell us about your venue or event.";
+ $("attached").textContent="";
+}
+function prepTrial(){
+ enquiryType="Free media day application";attachedQuote="";
+ $("contactLead").textContent="Applying for your free media day — tell us a bit more.";
+ $("attached").textContent="";
+}
+$("modal").addEventListener("click",e=>{if(e.target.id=="modal")$("modal").classList.remove("on")});
+document.addEventListener("keydown",e=>{if(e.key=="Escape")$("modal").classList.remove("on")});
+$("csub").onclick=()=>{
+ const f=$("cf");if(!f.reportValidity())return;
+ const data=new FormData(f);
+ const body=["Enquiry: "+enquiryType,...["name","company","email","phone","site","pref","brief"].map(k=>k+": "+(data.get(k)||"")),attachedQuote?"\nQuote:\n"+attachedQuote:""].filter(Boolean).join("\n");
+ const url="mailto:"+pricing.contact+"?subject="+encodeURIComponent("TAPPED IN — "+enquiryType)+"&body="+encodeURIComponent(body);
+ $("cmsg").textContent="This opens your email app with your details. Send the email there to submit your enquiry. If it does not open, email "+pricing.contact+" directly. Nothing has been sent by this website.";
+ window.location.href=url;
+};
+</script>
+</body>
+</html>
